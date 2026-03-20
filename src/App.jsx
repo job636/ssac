@@ -97,7 +97,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [today, setToday] = useState('');
 
-  const apiKey = "";
+  const apiKey = "AIzaSyCeHVy-kOTdC-oLYgOdj1lronq1wBqKWmw";
 
   useEffect(() => {
     const date = new Date();
