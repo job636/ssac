@@ -142,7 +142,7 @@ const App = () => {
 
     const fetchWithBackoff = async (retries = 5, delay = 1000) => {
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -189,7 +189,7 @@ const App = () => {
     <html lang="ko">
     <head>
       <meta charset="utf-8">
-      <title>T-MAPP 결과 보고서</title>
+      <title>T-MAS 결과 보고서</title>
       <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
@@ -357,9 +357,9 @@ const App = () => {
         <div class="report-header">
           <div class="header-left">
             <span class="institution-name">싹(SSAC)심리상담센터&AI상담콘텐츠연구소</span>
-            <h1 class="report-title">나의 마음 지도: T-MAPP 보고서</h1>
+            <h1 class="report-title">나의 마음 지도: T-MAS 보고서</h1>
           </div>
-        </div>
+        </div
 
         <div class="section">
           <div class="solution-box">
@@ -370,7 +370,8 @@ const App = () => {
 
         <div class="report-footer">
           <p class="footer-institution">싹(SSAC)심리상담센터&AI상담콘텐츠연구소</p>
-          <p>상담문의: ssac-center.com | 본 결과지는 무단 복제를 금합니다.</p>
+          <p>한국상담학회 1급, 2급 연수기관</p>
+          <p>상담문의: 010-8645-0850 job636@hanmail.net | 본 결과지는 무단 복제를 금합니다.</p>
           <p style="margin-top: 5px;">본 결과지는 귀하의 심리적 안정과 자각을 돕기 위해 작성되었습니다.</p>
         </div>
         <div class="page-number">2 / 2</div>
@@ -581,6 +582,7 @@ const App = () => {
         <p className="text-sm text-gray-500">
           한국상담학회 교육연수기관(1급, 2급 수련기관)
         </p>
+
         <div className="text-sm text-gray-500 mt-2 flex justify-center gap-6">
           <span className="flex items-center gap-1.5 font-medium"><Phone className="w-4 h-4" /> 063-225-1400</span>
           <span className="flex items-center gap-1.5 font-medium"><Mail className="w-4 h-4" /> job636@hanmail.net</span>
