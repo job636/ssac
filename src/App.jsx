@@ -98,7 +98,7 @@ const App = () => {
   const [today, setToday] = useState('');
 
   // 선생님의 API 키
-  const apiKey = "AIzaSyBQHdA33KuZZgp224UacOCXmAaJ2tAbqQk";
+  const apiKey = "AIzaSyDTZhT2YI70c1sGYXU-e9Y9jcSxQmvwI_s";
 
   useEffect(() => {
     const date = new Date();
