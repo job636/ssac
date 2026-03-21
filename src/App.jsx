@@ -286,7 +286,7 @@ const App = () => {
       <footer className="mt-8 text-center text-gray-500 text-sm space-y-1">
         <p>싹(SSAC) 심리상담센터 & AI상담 콘텐츠 연구소</p>
         <p>한국상담학회 1급, 2급 교육연수기관</p>
-        <P>문의 010-8645-0850 job636@hanmail.net</P>
+        <p>문의 010-8645-0850 job636@hanmail.net</p>
       </footer>
     </div>
   );
