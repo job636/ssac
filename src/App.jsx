@@ -98,7 +98,7 @@ const App = () => {
   const [today, setToday] = useState('');
 
   // 선생님의 API 키
-  const apiKey = "AIzaSyCeHVy-kOTdC-oLYgOdj1lronq1wBqKWmw";
+  const apiKey = "AIzaSyBQHdA33KuZZgp224UacOCXmAaJ2tAbqQk";
 
   useEffect(() => {
     const date = new Date();
@@ -134,7 +134,7 @@ const App = () => {
     const userQuery = `고민: ${concern}\n선택카드: ${selectedCard.name}\n내담자의 시선: ${observation}`;
 
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -152,17 +152,20 @@ const App = () => {
         setAnalysis(parts[0].replace('[HEALING_MESSAGE]', '').trim());
         setSolutionTip(parts[1]?.trim() || "1. 차분하게 자신을 돌보는 시간을 가져보세요.");
         setStep(4);
+      } else {
+        setAnalysis("응답을 받지 못했습니다. 다시 시도해주세요.");
+        setStep(4);
+      } catch (error) { // <-- 이제 이 catch와 짝이 맞게 됩니다!
+        console.error("Gemini API 오류:", error);
+        setAnalysis("마음 연결에 실패했습니다. 다시 시도해주세요.");
+        setStep(4);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      setAnalysis("마음 연결에 잠시 지연이 생겼습니다. 다시 시도해주세요.");
-      setStep(4);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  const getReportTemplate = () => {
-    return `
+    const getReportTemplate = () => {
+      return `
     <!DOCTYPE html>
     <html lang="ko">
     <head>
@@ -203,98 +206,98 @@ const App = () => {
       <div class="footer">싹(SSAC)심리상담센터 | 문의: 063-225-1400</div>
     </body>
     </html>`;
-  };
+    };
 
-  const handleSaveHTML = () => {
-    const htmlContent = getReportTemplate();
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `T-MAS_보고서_${userName}.html`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+    const handleSaveHTML = () => {
+      const htmlContent = getReportTemplate();
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `T-MAS_보고서_${userName}.html`;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
 
-  return (
-    <div className="min-h-screen bg-white text-gray-800 flex flex-col items-center p-4 font-sans">
-      <header className="w-full max-w-4xl mb-12 text-center pt-8">
-        <h1 className="text-4xl font-extrabold text-indigo-600 mb-3 flex items-center justify-center gap-3">
-          <Sparkles className="w-10 h-10" /> 마음을 읽는 Tarot 상담 (T-MAS)
-        </h1>
-        <p className="text-gray-500 text-lg">싹(SSAC) 심리상담센터와 함께하는 마음 치유</p>
-      </header>
+    return (
+      <div className="min-h-screen bg-white text-gray-800 flex flex-col items-center p-4 font-sans">
+        <header className="w-full max-w-4xl mb-12 text-center pt-8">
+          <h1 className="text-4xl font-extrabold text-indigo-600 mb-3 flex items-center justify-center gap-3">
+            <Sparkles className="w-10 h-10" /> 마음을 읽는 Tarot 상담 (T-MAS)
+          </h1>
+          <p className="text-gray-500 text-lg">싹(SSAC) 심리상담센터와 함께하는 마음 치유</p>
+        </header>
 
-      <main className="flex-grow w-full max-w-4xl bg-gray-50 rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
-        {step === 1 && (
-          <div className="space-y-8 flex flex-col items-center">
-            <h2 className="text-2xl font-bold">당신의 고민을 들려주시겠어요?</h2>
-            <div className="w-full max-w-2xl space-y-4">
-              <div className="flex gap-4">
-                <input type="text" className="flex-1 p-4 rounded-xl border" placeholder="성명" value={userName} onChange={(e) => setUserName(e.target.value)} />
-                <input type="text" className="flex-1 p-4 rounded-xl border" placeholder="학교" value={school} onChange={(e) => setSchool(e.target.value)} />
-                <input type="text" className="w-24 p-4 rounded-xl border" placeholder="학년" value={grade} onChange={(e) => setGrade(e.target.value)} />
+        <main className="flex-grow w-full max-w-4xl bg-gray-50 rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+          {step === 1 && (
+            <div className="space-y-8 flex flex-col items-center">
+              <h2 className="text-2xl font-bold">당신의 고민을 들려주시겠어요?</h2>
+              <div className="w-full max-w-2xl space-y-4">
+                <div className="flex gap-4">
+                  <input type="text" className="flex-1 p-4 rounded-xl border" placeholder="성명" value={userName} onChange={(e) => setUserName(e.target.value)} />
+                  <input type="text" className="flex-1 p-4 rounded-xl border" placeholder="학교" value={school} onChange={(e) => setSchool(e.target.value)} />
+                  <input type="text" className="w-24 p-4 rounded-xl border" placeholder="학년" value={grade} onChange={(e) => setGrade(e.target.value)} />
+                </div>
+                <textarea className="w-full h-40 p-4 rounded-xl border resize-none" placeholder="고민을 적어보세요..." value={concern} onChange={(e) => setConcern(e.target.value)} />
+                <button onClick={handleGoToSelection} disabled={!userName || !concern} className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold text-xl disabled:opacity-50 transition-all hover:bg-indigo-700">상담 시작하기</button>
               </div>
-              <textarea className="w-full h-40 p-4 rounded-xl border resize-none" placeholder="고민을 적어보세요..." value={concern} onChange={(e) => setConcern(e.target.value)} />
-              <button onClick={handleGoToSelection} disabled={!userName || !concern} className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold text-xl disabled:opacity-50 transition-all hover:bg-indigo-700">상담 시작하기</button>
             </div>
-          </div>
-        )}
+          )}
 
-        {step === 2 && (
-          <div className="text-center space-y-8">
-            <h2 className="text-2xl font-bold">에너지가 닿는 카드를 선택하세요</h2>
-            <div className="flex flex-wrap justify-center gap-4">
-              {randomCards.map((card, idx) => (
-                <div key={idx} onClick={() => handleCardPick(card)} className="w-24 h-40 bg-indigo-900 rounded-lg cursor-pointer hover:-translate-y-4 transition-all border-2 border-amber-200" />
-              ))}
+          {step === 2 && (
+            <div className="text-center space-y-8">
+              <h2 className="text-2xl font-bold">에너지가 닿는 카드를 선택하세요</h2>
+              <div className="flex flex-wrap justify-center gap-4">
+                {randomCards.map((card, idx) => (
+                  <div key={idx} onClick={() => handleCardPick(card)} className="w-24 h-40 bg-indigo-900 rounded-lg cursor-pointer hover:-translate-y-4 transition-all border-2 border-amber-200" />
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {step === 3 && selectedCard && (
-          <div className="grid md:grid-cols-2 gap-10">
-            <div className="text-center">
-              <img src={selectedCard.url} className="w-56 rounded-xl shadow-2xl mx-auto mb-4" />
-              <p className="font-bold text-indigo-600">{selectedCard.name}</p>
+          {step === 3 && selectedCard && (
+            <div className="grid md:grid-cols-2 gap-10">
+              <div className="text-center">
+                <img src={selectedCard.url} className="w-56 rounded-xl shadow-2xl mx-auto mb-4" />
+                <p className="font-bold text-indigo-600">{selectedCard.name}</p>
+              </div>
+              <div className="space-y-6">
+                <h3 className="text-xl font-bold">이 그림이 어떻게 보이시나요?</h3>
+                <p>카드 속 인물의 표정, 배경, 혹은 느껴지는 에너지에 대해 자유롭게 적어주세요.</p>
+                <textarea className="w-full h-40 p-4 rounded-xl border" placeholder="느껴지는 대로 적어보세요..." value={observation} onChange={(e) => setObservation(e.target.value)} />
+                <button onClick={getExpertAnalysis} disabled={loading || !observation} className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold transition-all hover:bg-indigo-700">
+                  {loading ? <div className="flex items-center justify-center gap-2"><Loader2 className="animate-spin" /> 마음 읽는 중...</div> : "내 마음 전하기"}
+                </button>
+              </div>
             </div>
-            <div className="space-y-6">
-              <h3 className="text-xl font-bold">이 그림이 어떻게 보이시나요?</h3>
-              <p>카드 속 인물의 표정, 배경, 혹은 느껴지는 에너지에 대해 자유롭게 적어주세요.</p>
-              <textarea className="w-full h-40 p-4 rounded-xl border" placeholder="느껴지는 대로 적어보세요..." value={observation} onChange={(e) => setObservation(e.target.value)} />
-              <button onClick={getExpertAnalysis} disabled={loading || !observation} className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold transition-all hover:bg-indigo-700">
-                {loading ? <div className="flex items-center justify-center gap-2"><Loader2 className="animate-spin" /> 마음 읽는 중...</div> : "내 마음 전하기"}
-              </button>
-            </div>
-          </div>
-        )}
+          )}
 
-        {step === 4 && (
-          <div className="space-y-8">
-            <div className="bg-white p-6 rounded-2xl border shadow-sm">
-              <h3 className="text-indigo-600 font-bold mb-4 flex items-center gap-2"><Heart className="w-5 h-5" /> 치유의 리딩</h3>
-              <div className="whitespace-pre-wrap leading-relaxed">{analysis}</div>
+          {step === 4 && (
+            <div className="space-y-8">
+              <div className="bg-white p-6 rounded-2xl border shadow-sm">
+                <h3 className="text-indigo-600 font-bold mb-4 flex items-center gap-2"><Heart className="w-5 h-5" /> 치유의 리딩</h3>
+                <div className="whitespace-pre-wrap leading-relaxed">{analysis}</div>
+              </div>
+              <div className="bg-indigo-50 p-6 rounded-2xl border-2 border-indigo-200">
+                <h3 className="text-indigo-700 font-bold mb-4 flex items-center gap-2"><Lightbulb className="w-5 h-5" /> 전문가 솔루션</h3>
+                <div className="whitespace-pre-wrap leading-relaxed">{solutionTip}</div>
+              </div>
+              <div className="flex gap-4">
+                <button onClick={handleSaveHTML} className="flex-1 py-4 bg-indigo-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all"><Download /> 결과 저장</button>
+                <button onClick={() => setStep(1)} className="flex-1 py-4 bg-gray-200 rounded-xl font-bold hover:bg-gray-300 transition-all">다시 시작</button>
+              </div>
             </div>
-            <div className="bg-indigo-50 p-6 rounded-2xl border-2 border-indigo-200">
-              <h3 className="text-indigo-700 font-bold mb-4 flex items-center gap-2"><Lightbulb className="w-5 h-5" /> 전문가 솔루션</h3>
-              <div className="whitespace-pre-wrap leading-relaxed">{solutionTip}</div>
-            </div>
-            <div className="flex gap-4">
-              <button onClick={handleSaveHTML} className="flex-1 py-4 bg-indigo-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all"><Download /> 결과 저장</button>
-              <button onClick={() => setStep(1)} className="flex-1 py-4 bg-gray-200 rounded-xl font-bold hover:bg-gray-300 transition-all">다시 시작</button>
-            </div>
-          </div>
-        )}
-      </main>
+          )}
+        </main>
 
-      <footer className="mt-8 text-center text-gray-500 text-sm space-y-1">
-        <p>싹(SSAC) 심리상담센터 & AI상담 콘텐츠 연구소</p>
-        <p>한국상담학회 1급, 2급 교육연수기관</p>
-        <p>문의처: 010-8645-0850 job636@hanmail.net</p>
-      </footer>
-    </div>
-    </div >
-  );
-};
+        <footer className="mt-8 text-center text-gray-500 text-sm space-y-1">
+          <p>싹(SSAC) 심리상담센터 & AI상담 콘텐츠 연구소</p>
+          <p>한국상담학회 1급, 2급 교육연수기관</p>
+          <p>문의처: 010-8645-0850 job636@hanmail.net</p>
+        </footer>
+      </div>
 
-export default App;
+    );
+  };
+
+  export default App;
