@@ -121,11 +121,12 @@ const App = () => {
     if (!observation.trim()) return;
     setLoading(true);
 
-    const systemPrompt = "너는 따뜻한 상담사야. 사용자의 고민과 타로 카드 이미지를 보고 깊이 공감해준 뒤 치유의 메시지와 실천 방안 5가지를 작성해줘. 답변 시 반드시 '" + userName + "님'이라고 불러줘.";
-    const userQuery = "고민: " + concern + "\n선택카드: " + selectedCard.name + "\n관찰내용: " + observation;
+    const systemPrompt = "너는 정서중심 상담사야. " + userName + "님의 고민과 타로 이미지를 보고 깊이 공감해주고 실천 방안 5가지를 작성해줘.";
+    const userQuery = "고민: " + concern + "\n관찰: " + observation;
 
     try {
-      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey, {
+      // 주소를 아주 깔끔하게 정리했습니다.
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -134,21 +135,23 @@ const App = () => {
         })
       });
 
+      if (!response.ok) {
+        throw new Error('네트워크 응답이 좋지 않습니다.');
+      }
+
       const result = await response.json();
       const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
       if (text) {
-        const parts = text.split('[SOLUTION_TIP]');
-        setAnalysis(parts[0].replace('[HEALING_MESSAGE]', '').trim());
-        setSolutionTip(parts[1]?.trim() || "1. 차분하게 자신을 돌보는 시간을 가져보세요.");
+        setAnalysis(text);
+        setSolutionTip("오늘 하루 " + userName + "님을 위한 작은 실천을 시작해보세요.");
         setStep(4);
       } else {
-        setAnalysis("응답을 받지 못했습니다. 다시 시도해주세요.");
+        setAnalysis("AI가 답변을 생성하지 못했습니다. 다시 시도해주세요.");
         setStep(4);
       }
     } catch (error) {
-      console.error("Gemini API 오류:", error);
-      setAnalysis("마음 연결에 실패했습니다. 다시 시도해주세요.");
+      setAnalysis("마음 연결에 실패했습니다. API 키의 앞뒤 공백을 확인해주세요.");
       setStep(4);
     } finally {
       setLoading(false);
