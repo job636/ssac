@@ -98,7 +98,7 @@ const App = () => {
   const [today, setToday] = useState('');
 
   // 선생님의 API 키
-  const apiKey = "AIzaSyDTZhT2YI70c1sGYXU-e9Y9jcSxQmvwI_s";
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
   useEffect(() => {
     const date = new Date();
@@ -126,7 +126,7 @@ const App = () => {
 
     try {
       // 주소를 아주 깔끔하게 정리했습니다.
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -178,7 +178,7 @@ const App = () => {
     </head>
     <body>
       <div class="header">
-        <div style="font-size: 10pt;">싹(SSAC)심리상담센터&AI상담콘텐츠연구소</div>
+        <div style="font-size: 10pt;">싹(SSAC)심리상담센터 & AI상담콘텐츠연구소</div>
         <div class="title">T-MAS 마음 분석 보고서</div>
         <div style="margin-top: 10px;">성명: ${userName} | 일자: ${today}</div>
       </div>
@@ -197,7 +197,7 @@ const App = () => {
         <div class="section-title">03. 전문가 솔루션</div>
         <div style="white-space: pre-wrap;">${solutionTip}</div>
       </div>
-      <div class="footer">싹(SSAC)심리상담센터 | 문의: 063-225-1400</div>
+      <div class="footer">싹(SSAC)심리상담센터& AI상담콘텐츠 연구소 | 문의: 010-8645-0850 job636@hanmail.net</div>
     </body>
     </html>`;
   };
@@ -285,7 +285,8 @@ const App = () => {
 
       <footer className="mt-8 text-center text-gray-500 text-sm space-y-1">
         <p>싹(SSAC) 심리상담센터 & AI상담 콘텐츠 연구소</p>
-        <p>한국상담학회 교육연수기관 | 전북 전주시 완산구</p>
+        <p>한국상담학회 1급, 2급 교육연수기관</p>
+        <P>문의 010-8645-0850 job636@hanmail.net</P>
       </footer>
     </div>
   );
